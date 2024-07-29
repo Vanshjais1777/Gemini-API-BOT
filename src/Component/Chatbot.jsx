@@ -36,7 +36,7 @@ const Chatbot = () => {
 
   return (
     <div className="flex h-screen">
-      <div className="bg-zinc-900 overflow-y-auto text-white w-1/4 p-4 fixed left-0 top-0 h-full">
+      <div className="bg-zinc-900 overflow-y-auto text-white w-full md:w-1/4 p-4 fixed left-0 top-0 h-full">
         <h2 className="text-xl font-semibold mb-4">History :</h2>
         <ul>
           {history.map((entry, index) => (
@@ -47,7 +47,7 @@ const Chatbot = () => {
         </ul>
       </div>
 
-      <div className="flex bg-zinc-800 w-3/4 fixed right-0 top-0 h-full">
+      <div className="flex bg-zinc-800 w-full md:w-3/4 fixed right-0 top-0 h-full">
         <div className="flex-1 flex flex-col rounded-lg shadow-lg m-4 overflow-hidden">
           <div className="p-4 border-b bg-white border-black">
             <h1 className="text-xl text-gray-700 font-semibold">
@@ -82,7 +82,7 @@ const Chatbot = () => {
               onChange={(e) => setUserInput(e.target.value)}
             />
             <button
-              className="bg-blue-700 text-white px-4 rounded-r-lg"
+              className="bg-blue-700 text-white px-4 rounded-r-lg w-fit md:w-auto"
               onClick={run}
             >
               Send
