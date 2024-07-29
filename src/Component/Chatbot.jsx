@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { marked } from "marked";
 
 const Chatbot = () => {
   const [messages, setMessages] = useState([]);
+  const [history, setHistory] = useState([]);
   const [userInput, setUserInput] = useState("");
   const API_KEY = "AIzaSyCEckqpho1EsIP5jYZ26PaGu6jkRDWHdww";
   const genAI = new GoogleGenerativeAI(API_KEY);
@@ -18,6 +20,9 @@ const Chatbot = () => {
       // Add user's message to the chatbox
       setMessages([...messages, { sender: "user", text: userInput }]);
 
+      // Add user's input to the history
+      setHistory([...history, { text: userInput }]);
+
       // Add chatbot's response to the chatbox
       setMessages((prevMessages) => [...prevMessages, { sender: "bot", text }]);
 
@@ -31,18 +36,18 @@ const Chatbot = () => {
 
   return (
     <div className="flex h-screen">
-      <div className="bg-zinc-900 scroll-m-1 overflow-y-auto text-white w-1/4 p-4 fixed left-0 top-0 h-full">
+      <div className="bg-zinc-900 overflow-y-auto text-white w-1/4 p-4 fixed left-0 top-0 h-full">
         <h2 className="text-xl font-semibold mb-4">History :</h2>
         <ul>
-          <li className="mb-2">
-            {messages.map((msg, index) => (
-              <h3 className="bg-zinc-600 mb-1">{msg.text}</h3>
-            ))}
-          </li>
+          {history.map((entry, index) => (
+            <li key={index} className="mb-2">
+              <h3 className="bg-zinc-600 p-2 rounded">{entry.text}</h3>
+            </li>
+          ))}
         </ul>
       </div>
 
-      <div className="flex w- bg-zinc-800 w-3/4 fixed right-0 top-0 h-screen">
+      <div className="flex bg-zinc-800 w-3/4 fixed right-0 top-0 h-full">
         <div className="flex-1 flex flex-col rounded-lg shadow-lg m-4 overflow-hidden">
           <div className="p-4 border-b bg-white border-black">
             <h1 className="text-xl text-gray-700 font-semibold">
@@ -56,15 +61,14 @@ const Chatbot = () => {
             {messages.map((msg, index) => (
               <div
                 key={index}
-                className={msg.sender === "user" ? "text-right" : "text-left"}
+                className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"
+                  }`}
               >
-                <p
-                  className={`inline-block bg-${
-                    msg.sender === "user" ? "blue" : "gray"
-                  }-200 p-2 m-2 rounded-lg`}
-                >
-                  {msg.text}
-                </p>
+                <div
+                  className={`inline-block p-2 m-2 rounded-lg ${msg.sender === "user" ? "bg-blue-600" : "bg-gray-700"
+                    }`}
+                  dangerouslySetInnerHTML={{ __html: marked(msg.text) }}
+                />
               </div>
             ))}
           </div>
@@ -78,7 +82,7 @@ const Chatbot = () => {
               onChange={(e) => setUserInput(e.target.value)}
             />
             <button
-              className="bg-blue-500 text-white px-4 rounded-r-lg"
+              className="bg-blue-700 text-white px-4 rounded-r-lg"
               onClick={run}
             >
               Send
